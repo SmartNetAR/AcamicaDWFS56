@@ -16,28 +16,31 @@ const helados = [
 ];
 
 
-server.get( "/helados", ( req, res ) => {
+server.get("/helados", (req, res) => {
 
-    res.status(200).json( helados );
+    res.status(200).json(helados);
 
-} ); 
+});
 
-server.post( "/helados", ( req, res ) => {
+server.post("/helados", (req, res) => {
+    if (!req.body.sabor) {
+        return res.status(422).json({ msg: "El sabor es requerido" })
+    }
     helados.push(req.body)
-   res.status(201).end();
-} );
+    res.status(201).end();
+});
 
-server.use( "*", ( req, res ) => {
+server.use("*", (req, res) => {
 
     console.log(`No se encuentra la ruta ${req.method} ${req.url}.`)
     res.status(404).json(
         {
             error: true,
-            msg:  `No se encuentra la ruta.`
+            msg: `No se encuentra la ruta.`
         }
     )
-} );
+});
 
 
 
-server.listen(port, ()=>{ console.log("Servidor escuchando en el puerto "+port+"...")} );
+server.listen(port, () => { console.log("Servidor escuchando en el puerto " + port + "...") });
