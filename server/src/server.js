@@ -12,12 +12,15 @@ const port = 5000;
 
 const helados = [
     {
+        id: 1,
         sabor: "vainilla"
     },
     {
+        id: 3,
         sabor: "frutilla"
     },
     {
+        id: 5,
         sabor: "chocolate"
     }
 ];
@@ -29,6 +32,28 @@ const helados = [
 
 server.use(midLog) */;
 
+function validarId(req, res, next) {
+
+    const id = req.params.id;
+
+    const helado = helados.find( h => h.id === parseInt(id) );
+
+    if (! helado )
+    {
+        res.status(404).json({ msg: `No se encuentra el recurso ${id}` });       
+    }
+
+    next();
+}
+
+server.get("/helados/:id", validarId, (req, res) =>{
+
+    const id = req.params.id;
+
+    const helado = helados.find( h => h.id === parseInt(id) );
+
+    res.status(200).json( helado )
+})
 
 server.get("/helados", (req, res) => {
 
