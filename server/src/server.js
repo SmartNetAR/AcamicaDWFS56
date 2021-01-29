@@ -1,7 +1,14 @@
 const express = require("express");
+const morgan = require("morgan");
+
+
 const server = express();
+
+
+server.use(morgan("dev"));
 server.use(express.json());
 const port = 5000;
+
 
 const helados = [
     {
@@ -15,6 +22,13 @@ const helados = [
     }
 ];
 
+/* const midLog = (req, res, next) =>{
+    console.log(req.method, req.url, req.path);
+    next();
+}
+
+server.use(midLog) */;
+
 
 server.get("/helados", (req, res) => {
 
@@ -22,10 +36,15 @@ server.get("/helados", (req, res) => {
 
 });
 
-server.post("/helados", (req, res) => {
+const saborRequerido = (req, res, next) => {
     if (!req.body.sabor) {
         return res.status(422).json({ msg: "El sabor es requerido" })
     }
+    next();
+}
+
+server.post("/helados", saborRequerido, (req, res) => {
+
     helados.push(req.body)
     res.status(201).end();
 });
